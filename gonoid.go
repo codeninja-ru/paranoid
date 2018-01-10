@@ -11,20 +11,19 @@ import (
 // https://github.com/ai/nanoid
 // https://elithrar.github.io/article/generating-secure-random-numbers-crypto-rand/
 // https://github.com/matoous/go-nanoid
-func Goid64() (string, error) {
-	const size = 21
+func Goid64(length int) (string, error) {
 	const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_~" // the length must be 64 bytes
 	bitLen := byte(6)                                                                   //byte(math.Floor(math.Log2(float64(len(alphabet)-1)) + 1))
+	mask := byte(1<<bitLen - 1)
 
-	bytes := make([]byte, size)
+	bytes := make([]byte, length)
 	_, err := rand.Read(bytes)
 	if err != nil {
 		return "", err
 	}
 
 	for i, _ := range bytes {
-		bytes[i] &= 1<<bitLen - 1
-		bytes[i] = alphabet[bytes[i]]
+		bytes[i] = alphabet[bytes[i]&mask]
 	}
 
 	return string(bytes[:]), nil
@@ -36,15 +35,14 @@ func Govnoid() (string, error) {
 	const alphabet = "abcdefghijklmnopqrstuvwxyz"
 
 	var bitLen byte = 0
-	var length byte = byte(len(alphabet))
+	var aLen byte = byte(len(alphabet))
 	for b := len(alphabet) - 1; b > 0; bitLen++ {
 		b = b >> 1
 	}
 	maxNumber := ^(^byte(0) << bitLen)
-	diff := maxNumber - length + 1 // including zero
-	//bitLen := byte(6) //byte(math.Floor(math.Log2(float64(len(alphabet)-1)) + 1))
-	steps := byte(float32(length)*(((1/float32(bitLen))*float32(diff))+1)) + 1 // plas 1 to not ceil
-	//fmt.Printf("len = %d,bitLen = %d, max = %d, diff = %d, steps = %v\n", length, bitLen, maxNumber, diff, steps)
+	diff := maxNumber - aLen + 1                                             // including zero
+	steps := byte(float32(aLen)*(((1/float32(bitLen))*float32(diff))+1)) + 1 // plas 1 to not ceil
+	//fmt.Printf("len = %d,bitLen = %d, max = %d, diff = %d, steps = %v\n", aLen, bitLen, maxNumber, diff, steps)
 
 	bytes := make([]byte, steps)
 	chars := make([]byte, size)
@@ -56,8 +54,7 @@ func Govnoid() (string, error) {
 	j := byte(0)
 	for i, _ := range bytes {
 		bytes[i] &= 1<<bitLen - 1
-		//fmt.Printf("v = %v, i = %d, j = %d\n", bytes[i], i, j)
-		if bytes[i] < length-1 {
+		if bytes[i] < aLen-1 {
 			chars[j] = alphabet[bytes[i]]
 			j++
 		}
@@ -72,7 +69,7 @@ func Govnoid() (string, error) {
 
 func main() {
 	for i := 0; i < 100000; i++ {
-		uuid, _ := Govnoid()
+		uuid, _ := Goid64(21)
 		fmt.Println(uuid)
 	}
 	//for {
