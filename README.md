@@ -31,6 +31,7 @@ func Goid64(length int) (string, error) {
 
 usage
 ```
-Goid64(21) => XjhI1USXYwb8HdTF6SIYI
+uid, _ := Goid64(21)
+uid => XjhI1USXYwb8HdTF6SIYI
 ```
 
