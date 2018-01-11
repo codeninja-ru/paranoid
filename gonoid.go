@@ -13,8 +13,6 @@ import (
 // https://github.com/matoous/go-nanoid
 func Goid64(length int) (string, error) {
 	const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_~" // the length must be 64 bytes
-	bitLen := byte(6)                                                                   //byte(math.Floor(math.Log2(float64(len(alphabet)-1)) + 1))
-	mask := byte(1<<bitLen - 1)
 
 	bytes := make([]byte, length)
 	_, err := rand.Read(bytes)
@@ -23,7 +21,7 @@ func Goid64(length int) (string, error) {
 	}
 
 	for i, _ := range bytes {
-		bytes[i] = alphabet[bytes[i]&mask]
+		bytes[i] = alphabet[bytes[i]&63]
 	}
 
 	return string(bytes[:]), nil
@@ -68,9 +66,17 @@ func Govnoid() (string, error) {
 }
 
 func main() {
-	for i := 0; i < 100000; i++ {
+	m := make(map[rune]int)
+
+	for i := 0; i < 1000000; i++ {
 		uuid, _ := Goid64(21)
-		fmt.Println(uuid)
+		for _, val := range uuid {
+			m[val] = m[val] + 1
+		}
+		//fmt.Println(uuid)
+	}
+	for idx, val := range m {
+		fmt.Printf("%#U - %d\n", idx, val)
 	}
 	//for {
 	//	uuid, _ := Govnoid()

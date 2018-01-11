@@ -11,8 +11,6 @@ import (
 
 func Goid64(length int) (string, error) {
 	const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_~" // the length must be 64 bytes
-	bitLen := byte(6)                                                                   
-	mask := byte(1<<bitLen - 1)
 
 	bytes := make([]byte, length)
 	_, err := rand.Read(bytes)
@@ -21,12 +19,13 @@ func Goid64(length int) (string, error) {
 	}
 
 	for i, _ := range bytes {
-		bytes[i] = alphabet[bytes[i]&mask]
+		bytes[i] = alphabet[bytes[i]&63]
 	}
 
 	return string(bytes[:]), nil
 
 }
+
 ```
 
 usage
