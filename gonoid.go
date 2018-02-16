@@ -73,7 +73,7 @@ func main() {
 		for _, val := range uuid {
 			m[val] = m[val] + 1
 		}
-		//fmt.Println(uuid)
+		fmt.Print(uuid)
 	}
 	for idx, val := range m {
 		fmt.Printf("%#U - %d\n", idx, val)

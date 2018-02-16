@@ -1,7 +1,6 @@
-
 function jsid64(length) {
     length = length || 21;
-    var crypto = window.crypto || window.msCrypto;
+    var crypto = self.crypto || self.msCrypto;
     var alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_~';
     var bytes = new Int8Array(length);
     crypto.getRandomValues(bytes);

@@ -1,6 +1,8 @@
 # paranoid
 paranoid UID generator
 
+Simple UID generator with uniform distribution
+
 Just copy and paste
 
 ## Go
@@ -38,7 +40,7 @@ uid => XjhI1USXYwb8HdTF6SIYI
 ```javascript
 function jsid64(length) {
     length = length || 21;
-    var crypto = window.crypto || window.msCrypto;
+    var crypto = self.crypto || self.msCrypto;
     var alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_~';
     var bytes = new Int8Array(length);
     crypto.getRandomValues(bytes);
@@ -56,3 +58,6 @@ usage
 jsid(21)
 => "VHwd5~gXdo64UiK3uR_Zf"
 ```
+
+## How it works
+
